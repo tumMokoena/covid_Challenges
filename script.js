@@ -20,9 +20,17 @@ function showSuccess (input) {
 }
 
 //check email is valid
-function isValidEmail(email){
+function isValidEmail(input){
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(String(email).toLowerCase());
+    const emailTest =  re.test(String(input.value).toLowerCase());
+    console.log(emailTest);
+
+    if(!emailTest){
+        showError(input , 'please enter a valid email');
+    } else {
+         showSuccess(input);
+    }
+         
 }
 
 // check if input are empty
@@ -38,9 +46,32 @@ function checkInput(inputArr){
     });
 }
 
+function checkLength(input, min, max){
+    if(input.value.trim().length  < min){
+        showError(input,`${input.id} should be more than ${min} characters`);
+    } else if(input.value.trim().length > max) {
+        console.log(`${input.id} ${input.value.trim()}`)
+        showError(input, `${input.id} should not have characters more than ${max}`);
+    } else {
+        showSuccess(input);
+    }
+}
+
+function checkPasswordMatch(input1 , input2){
+    if(input1.value !== input2.value ){
+        showError(input2, 'passwords does not match!');
+    } else {
+        showSuccess(input2);
+    }
+}
+
 // add event listener for button submit
 form.addEventListener('submit', function(e) {
     e.preventDefault();
     
     checkInput([username,email,password,password2]);
+    checkLength(username, 3, 15);
+    checkLength(password, 6 , 20);
+    isValidEmail(email);
+    checkPasswordMatch(password, password2);
 })
